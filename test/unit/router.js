@@ -80,6 +80,18 @@ describe("Router", function () {
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/lol");
 		});
+		it("Can go to second soluion", function () {
+			var r = router()
+				.path(":id")
+					.path("truc")
+					.parent()
+				.parent()
+				.path("lol")
+					.path("machin");
+			var res = r.resolve("/child/lol/machin");
+			assert.ok(res);
+			assert.strictEqual(res.node.fullPath(), "/lol/machin");
+		});
 	});
 	describe("PathParams",function () {
 		it("Empty is no regexp",function(){
@@ -102,6 +114,19 @@ describe("Router", function () {
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/:id/ok/:truc");
 			assert.deepEqual(res.pathParams, {id:"lol", truc:"mdr"});
+		});
+		it("Can go to second soluion without pathParams pollution", function () {
+			var r = router()
+				.path(":id")
+					.path("truc")
+					.parent()
+				.parent()
+				.path("lol")
+					.path("machin");
+			var res = r.resolve("/child/lol/machin");
+			assert.ok(res);
+			assert.strictEqual(res.node.fullPath(), "/lol/machin");
+			assert.deepEqual(res.pathParams, {});
 		});
 	});
 });

@@ -3,14 +3,18 @@ var router = require('../../lib/router');
 
 describe("ON WORK", function () {
 
-	it("setted regexp", function () {
-			var r = router().path("child");
-			r.path(":id");
-			r.path("lol");
-			var res = r.resolve("/child/lol");
+	it("Can go to second soluion without pathParams pollution", function () {
+			var r = router()
+				.path(":id")
+					.path("truc")
+					.parent()
+				.parent()
+				.path("lol")
+					.path("machin");
+			var res = r.resolve("/child/lol/machin");
 			assert.ok(res);
-			assert.strictEqual(res.node.fullPath(), "/child/:id");
-			assert.deepEqual(res.pathParams, {id:"lol"});
+			assert.strictEqual(res.node.fullPath(), "/lol/machin");
+			assert.deepEqual(res.pathParams, {});
 	});
 
 });
