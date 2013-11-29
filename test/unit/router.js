@@ -41,4 +41,36 @@ describe("Router", function () {
 			assert.strictEqual(res, null);
 		});
 	});
+	describe("Resolve regexp", function() {
+		it("Resolve regexp", function () {
+			var r = router().path("child").path(":id").path("lol");
+			var res = r.resolve("/child/truc");
+			assert.ok(res);
+			assert.strictEqual(res.fullPath(), "/child/:id");
+		});
+		it("Resolve regexp until leaf", function () {
+			var r = router().path("child").path(":id").path("lol");
+			var res = r.resolve("/child/truc/lol");
+			assert.ok(res);
+			assert.strictEqual(res.fullPath(), "/child/:id/lol");
+		});
+	});
+	describe("Order is serious business", function() {
+		it("First regexp", function () {
+			var r = router().path("child");
+			r.path(":id");
+			r.path("lol");
+			var res = r.resolve("/child/lol");
+			assert.ok(res);
+			assert.strictEqual(res.fullPath(), "/child/:id");
+		});
+		it("First string", function () {
+			var r = router().path("child");
+			r.path("lol");
+			r.path(":id");
+			var res = r.resolve("/child/lol");
+			assert.ok(res);
+			assert.strictEqual(res.fullPath(), "/child/lol");
+		});
+	});
 });
