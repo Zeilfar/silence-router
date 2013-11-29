@@ -47,13 +47,17 @@ describe("Router", function () {
 	});
 	describe("Resolve regexp", function() {
 		it("Resolve regexp", function () {
-			var r = router().path("child").path(":id").path("lol");
+			var r = router().path("child")
+				.path(":id").parent()
+				.path("lol");
 			var res = r.resolve("/child/truc");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/:id");
 		});
 		it("Resolve regexp until leaf", function () {
-			var r = router().path("child").path(":id").path("lol");
+			var r = router().path("child")
+				.path(":id")
+				.path("lol");
 			var res = r.resolve("/child/truc/lol");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/:id/lol");
@@ -61,17 +65,17 @@ describe("Router", function () {
 	});
 	describe("Order is serious business", function() {
 		it("First regexp", function () {
-			var r = router().path("child");
-			r.path(":id");
-			r.path("lol");
+			var r = router().path("child")
+				.path(":id").parent()
+				.path("lol");
 			var res = r.resolve("/child/lol");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/:id");
 		});
 		it("First string", function () {
-			var r = router().path("child");
-			r.path("lol");
-			r.path(":id");
+			var r = router().path("child")
+				.path("lol").parent()
+				.path(":id");
 			var res = r.resolve("/child/lol");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/lol");
@@ -79,24 +83,21 @@ describe("Router", function () {
 	});
 	describe("PathParams",function () {
 		it("Empty is no regexp",function(){
-			var r = router().path("child");
-			r.path("lol");
+			var r = router().path("child").path("lol");
 			var res = r.resolve("/child/lol");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/lol");
 			assert.deepEqual(res.pathParams, {});
 		});
 		it("setted regexp", function () {
-			var r = router().path("child");
-			r.path(":id");
+			var r = router().path("child").path(":id");
 			var res = r.resolve("/child/lol");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/:id");
 			assert.deepEqual(res.pathParams, {id:"lol"});
 		});
 		it("setted regexp two time", function () {
-			var r = router().path("child");
-			r.path(":id").path("ok").path(":truc");
+			var r = router().path("child").path(":id").path("ok").path(":truc");
 			var res = r.resolve("/child/lol/ok/mdr");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/:id/ok/:truc");
