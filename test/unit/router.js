@@ -13,27 +13,31 @@ describe("Router", function () {
 			var r = router();
 			var res = r.resolve("/");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(),"");
+			assert.ok(res.node);
+			assert.strictEqual(res.node.fullPath(),"");
 		});
 
 		it("simple child", function() {
 			var r = router().path("child")
 			var res = r.resolve("/child");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(),"/child");
+			assert.ok(res.node);
+			assert.strictEqual(res.node.fullPath(),"/child");
 		});
 		it("chained childs", function() {
 			var r = router().path("child").path("other").path("lol");
 			var res = r.resolve("/child/other/lol");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(),"/child/other/lol");
+			assert.ok(res.node);
+			assert.strictEqual(res.node.fullPath(),"/child/other/lol");
 		});
 		
 		it("chained childs but can stop before leaf", function() {
 			var r = router().path("child").path("other").path("lol");
 			var res = r.resolve("/child/other");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(),"/child/other");
+			assert.ok(res.node);
+			assert.strictEqual(res.node.fullPath(),"/child/other");
 		});
 		it("Resolve failed", function () {
 			var r = router().path("child").path("other").path("lol");
@@ -46,13 +50,13 @@ describe("Router", function () {
 			var r = router().path("child").path(":id").path("lol");
 			var res = r.resolve("/child/truc");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(), "/child/:id");
+			assert.strictEqual(res.node.fullPath(), "/child/:id");
 		});
 		it("Resolve regexp until leaf", function () {
 			var r = router().path("child").path(":id").path("lol");
 			var res = r.resolve("/child/truc/lol");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(), "/child/:id/lol");
+			assert.strictEqual(res.node.fullPath(), "/child/:id/lol");
 		});
 	});
 	describe("Order is serious business", function() {
@@ -62,7 +66,7 @@ describe("Router", function () {
 			r.path("lol");
 			var res = r.resolve("/child/lol");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(), "/child/:id");
+			assert.strictEqual(res.node.fullPath(), "/child/:id");
 		});
 		it("First string", function () {
 			var r = router().path("child");
@@ -70,7 +74,7 @@ describe("Router", function () {
 			r.path(":id");
 			var res = r.resolve("/child/lol");
 			assert.ok(res);
-			assert.strictEqual(res.fullPath(), "/child/lol");
+			assert.strictEqual(res.node.fullPath(), "/child/lol");
 		});
 	});
 });
