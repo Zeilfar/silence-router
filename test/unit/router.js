@@ -77,4 +77,30 @@ describe("Router", function () {
 			assert.strictEqual(res.node.fullPath(), "/child/lol");
 		});
 	});
+	describe("PathParams",function () {
+		it("Empty is no regexp",function(){
+			var r = router().path("child");
+			r.path("lol");
+			var res = r.resolve("/child/lol");
+			assert.ok(res);
+			assert.strictEqual(res.node.fullPath(), "/child/lol");
+			assert.deepEqual(res.pathParams, {});
+		});
+		it("setted regexp", function () {
+			var r = router().path("child");
+			r.path(":id");
+			var res = r.resolve("/child/lol");
+			assert.ok(res);
+			assert.strictEqual(res.node.fullPath(), "/child/:id");
+			assert.deepEqual(res.pathParams, {id:"lol"});
+		});
+		it("setted regexp two time", function () {
+			var r = router().path("child");
+			r.path(":id").path("ok").path(":truc");
+			var res = r.resolve("/child/lol/ok/mdr");
+			assert.ok(res);
+			assert.strictEqual(res.node.fullPath(), "/child/:id/ok/:truc");
+			assert.deepEqual(res.pathParams, {id:"lol", truc:"mdr"});
+		});
+	});
 });
