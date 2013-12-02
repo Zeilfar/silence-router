@@ -65,9 +65,10 @@ describe("Router", function () {
 	});
 	describe("Order is serious business", function() {
 		it("First regexp", function () {
-			var r = router().path("child")
-				.path(":id").parent()
-				.path("lol");
+			var r = router()
+				.path("child")
+					.path(":id").parent()
+					.path("lol");
 			var res = r.resolve("/child/lol");
 			assert.ok(res);
 			assert.strictEqual(res.node.fullPath(), "/child/:id");
@@ -81,16 +82,14 @@ describe("Router", function () {
 			assert.strictEqual(res.node.fullPath(), "/child/lol");
 		});
 		it("Can go to second soluion", function () {
-			var r = router()
+			var r = router().path("child")
 				.path(":id")
-					.path("truc")
-					.parent()
+					.path("truc").parent()
 				.parent()
-				.path("lol")
-					.path("machin");
+				.path("lol").path("machin");
 			var res = r.resolve("/child/lol/machin");
 			assert.ok(res);
-			assert.strictEqual(res.node.fullPath(), "/lol/machin");
+			assert.strictEqual(res.node.fullPath(), "/child/lol/machin");
 		});
 	});
 	describe("PathParams",function () {
@@ -117,15 +116,16 @@ describe("Router", function () {
 		});
 		it("Can go to second soluion without pathParams pollution", function () {
 			var r = router()
-				.path(":id")
-					.path("truc")
+				.path("child")
+					.path(":id")
+						.path("truc")
+						.parent()
 					.parent()
-				.parent()
-				.path("lol")
-					.path("machin");
+					.path("lol")
+						.path("machin");
 			var res = r.resolve("/child/lol/machin");
 			assert.ok(res);
-			assert.strictEqual(res.node.fullPath(), "/lol/machin");
+			assert.strictEqual(res.node.fullPath(), "/child/lol/machin");
 			assert.deepEqual(res.pathParams, {});
 		});
 	});
