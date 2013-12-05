@@ -2,12 +2,11 @@
   "name": "silence-router",
   "version": "0.0.0",
   "description": "",
+  "author": "Zeil <far.vilain@gmail.com>",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha -R spec test/unit"
   },
-  "author": "",
-  "license": "BSD",
   "devDependencies": {
     "mocha": "~1.14.0"
   }
